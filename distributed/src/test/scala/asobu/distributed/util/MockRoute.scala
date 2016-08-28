@@ -7,9 +7,10 @@ object MockRoute {
   def apply(
     pathParts: List[String] = List("abc", "ep1"),
     verb: String = GET,
-    handlerClass: String = "HandlerClass"
+    handlerClass: String = "HandlerClass",
+    parameters: Option[Seq[Parameter]] = None
   ): Route = {
-    val call: HandlerCall = HandlerCall("test", handlerClass, false, "handle", None)
+    val call: HandlerCall = HandlerCall("test", handlerClass, false, "handle", parameters)
     call.setPos(null) //thanks for the mutable scala Positional, the default value NoPosition isn't serializable, this is not needed for the routes passed by the Routes Compiler
 
     val r = Route(HttpVerb(verb), PathPattern(pathParts.map(StaticPart)), call)

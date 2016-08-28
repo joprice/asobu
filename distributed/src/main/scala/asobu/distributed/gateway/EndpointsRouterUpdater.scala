@@ -104,8 +104,15 @@ object EndpointsRouterUpdater {
   private[gateway] def sortOutEndpoints(existing: List[Endpoint], toUpdate: List[EndpointDefinition]): SortResult = {
     val (toKeep, toPurge) = existing.partition { ep ⇒
       toUpdate.exists { newDef ⇒
-        newDef.id == ep.definition.id &&
-          ((ep.definition.version |@| newDef.version) map (_ == _)).getOrElse(false) //replace when version is different or missing
+        println(newDef.routeInfo.call.parameters)
+        val sameDef = newDef.routeInfo == ep.definition.routeInfo
+        println(s"${newDef.version} ${newDef.id} ${ep.definition.routeInfo}")
+        println(s"${ep.definition.version} ${ep.definition.id} ${ep.definition.routeInfo}")
+        println(sameDef)
+        newDef.routeInfo == ep.definition.routeInfo &&
+          ((ep.definition.version |@| newDef.version) map (_ >= _)).getOrElse(false) //replace when version is different or missing
+        //        newDef.id == ep.definition.id &&
+        //          ((ep.definition.version |@| newDef.version) map (_ == _)).getOrElse(false) //replace when version is different or missing
       }
     }
 
